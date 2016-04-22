@@ -1,2 +1,2 @@
 # gospinner
-A command line spinner in Go
+A simple command line spinner Go library.
