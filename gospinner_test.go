@@ -24,60 +24,30 @@ package gospinner
 
 import (
 	"fmt"
+	"testing"
 	"time"
 )
 
-const (
-	DefaultChars string        = "|/-\\"
-	DefaultSpeed time.Duration = 100 * time.Millisecond
-)
-
-// Spinner is a struct that stores Spinner information.
-type Spinner struct {
-	StartChan chan bool
-	StopChan  chan bool
-	Chars     string
-	Speed     time.Duration
+func TestStart(t *testing.T) {
+	spinner := NewSpinner()
+	spinner.Start(func(start, stop chan bool) {
+		fmt.Println("Processing...")
+		start <- true
+		time.Sleep(3 * time.Second)
+		stop <- true
+	})
+	fmt.Println("Done")
 }
 
-// NewSpinner creates a new Spinner.
-func NewSpinner() *Spinner {
-	return &Spinner{
-		StartChan: make(chan bool),
-		StopChan:  make(chan bool),
-		Chars:     DefaultChars,
-		Speed:     DefaultSpeed,
-	}
-}
-
-// Start starts the spinner. Start takes a function where the long-running
-// function happens.
-// To start the spinner, set the start channel to true.
-// To Stop the spinner, set the stop channel to true.
-func (s *Spinner) Start(f func(start, stop chan bool)) {
-	i := 0
-	spin := false
-	go f(s.StartChan, s.StopChan)
-	for {
-		select {
-		case <-s.StartChan:
-			spin = true
-		case <-s.StopChan:
-			fmt.Print("\r")
-			return
-		default:
-			if spin {
-				i++
-				i = i % len(s.Chars)
-				byte := s.Chars[i]
-				fmt.Printf("\r%c", byte)
-				time.Sleep(s.Speed)
-			}
-		}
-	}
-}
-
-// Stop stops the spinner.
-func (s *Spinner) Stop() {
-	s.StopChan <- true
+func TestStop(t *testing.T) {
+	spinner := NewSpinner()
+	go spinner.Start(func(start, stop chan bool) {
+		fmt.Println("Processing...")
+		start <- true
+		time.Sleep(3 * time.Second)
+		stop <- true
+	})
+	time.Sleep(1 * time.Second)
+	spinner.Stop()
+	fmt.Println("Done")
 }
