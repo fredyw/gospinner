@@ -50,8 +50,8 @@ func NewSpinner() *Spinner {
 	}
 }
 
-// Start starts the spinner. Start takes a function where the long-running
-// function happens.
+// Start starts the spinner. Start takes a function to execute the
+// long-running execution.
 // To start the spinner, set the start channel to true.
 // To Stop the spinner, set the stop channel to true.
 func (s *Spinner) Start(f func(start, stop chan bool)) {
