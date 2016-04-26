@@ -34,8 +34,8 @@ const (
 
 // Spinner is a struct that stores Spinner information.
 type Spinner struct {
-	StartChan chan bool
-	StopChan  chan bool
+	startChan chan bool
+	stopChan  chan bool
 	Chars     string
 	Speed     time.Duration
 }
@@ -43,8 +43,8 @@ type Spinner struct {
 // NewSpinner creates a new Spinner.
 func NewSpinner() *Spinner {
 	return &Spinner{
-		StartChan: make(chan bool),
-		StopChan:  make(chan bool),
+		startChan: make(chan bool),
+		stopChan:  make(chan bool),
 		Chars:     DefaultChars,
 		Speed:     DefaultSpeed,
 	}
@@ -57,12 +57,12 @@ func NewSpinner() *Spinner {
 func (s *Spinner) Start(f func(start, stop chan bool)) {
 	i := 0
 	spin := false
-	go f(s.StartChan, s.StopChan)
+	go f(s.startChan, s.stopChan)
 	for {
 		select {
-		case <-s.StartChan:
+		case <-s.startChan:
 			spin = true
-		case <-s.StopChan:
+		case <-s.stopChan:
 			fmt.Print("\r")
 			return
 		default:
@@ -79,5 +79,5 @@ func (s *Spinner) Start(f func(start, stop chan bool)) {
 
 // Stop stops the spinner.
 func (s *Spinner) Stop() {
-	s.StopChan <- true
+	s.stopChan <- true
 }
