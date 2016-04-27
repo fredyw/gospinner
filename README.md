@@ -5,7 +5,7 @@ A simple command line spinner Go library.
     go get github.com/fredyw/gospinner
 
 ### Example
-	spinner := NewSpinner()
+	spinner := gospinner.NewSpinner()
 	spinner.Start(func(start, stop chan bool) {
 		fmt.Println("Processing...")
 		start <- true
