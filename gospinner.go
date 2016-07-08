@@ -28,7 +28,9 @@ import (
 )
 
 const (
-	DefaultChars string        = "|/-\\"
+	// DefaultChars contains the default characters for the spinners.
+	DefaultChars string = "|/-\\"
+	// DefaultSpeed is the default animation speed.
 	DefaultSpeed time.Duration = 100 * time.Millisecond
 )
 
